@@ -42,6 +42,7 @@ const PhotoUI = (props) => {
                 setUserData(res.data.data);
             });
     }
+    console.log('hiii')
     const handleBackPress = () => {
         Alert.alert('Go Back', 'Press Ok to Exit', [
             {
