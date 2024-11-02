@@ -6,6 +6,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { CONS } from '../Constant';
 
 function Profile() {
     const [image, setImage] = useState('');
@@ -18,11 +19,13 @@ function Profile() {
     const scaleAnim = useRef(new Animated.Value(0)).current;
     const route = useRoute();
 
+    const IPaddress = CONS?.IPAddress;
+
     const flatListRef = useRef(null);
     let currentIndex = 0;
 
     async function getAllData() {
-        axios.get('http://192.168.1.36:3000/get-user').then(res => {
+        axios.get(`http://${IPaddress}:3000/get-user`).then(res => {
             console.log(res.data);
             setAllUserData(res.data.data);
         });

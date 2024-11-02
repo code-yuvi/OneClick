@@ -14,8 +14,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { CONS } from '../../Constant';
 
-function UpdateProfile() {
+function UpdateProfile({navigation}) {
     const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -39,6 +40,8 @@ function UpdateProfile() {
         });
     };
 
+    const IPaddress = CONS?.IPAddress;
+
 
     useEffect(() => {
         const userData = route.params.data;
@@ -61,10 +64,12 @@ function UpdateProfile() {
         };
         console.log(formdata);
         axios
-            .post('http://192.168.1.36:3000/update-user', formdata)
+            .post(`http://${IPaddress}:3000/update-user`, formdata)
             .then(res => {
-                console.log(res.data)
-                if (res.data.status == "Ok") {
+                if (res.data.status.toLowerCase() === "ok") {
+                    navigation.navigate("UserUI" , {
+                        from:"updateData"
+                    });
                     Toast.show({
                         type: 'success',
                         text1: 'Updated',

@@ -25,6 +25,7 @@ import Error from 'react-native-vector-icons/MaterialIcons';
 import { useState } from 'react';
 import Background from './../../Component/Background'
 import axios from 'axios';
+import { CONS } from '../Constant';
 
 const SignupPhoto = (props) => {
     const [name, setName] = useState('');
@@ -39,6 +40,7 @@ const SignupPhoto = (props) => {
     const [passwordVerify, setPasswordVerify] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [confPass, setConfPass] = useState('');
+    const IPaddress = CONS?.IPAddress;
 
 
     const navigation = useNavigation();
@@ -51,7 +53,7 @@ const SignupPhoto = (props) => {
         };
         if (nameVerify && emailVerify && passwordVerify && contactVerify) {
             axios
-                .post("http://192.168.1.36:3000/registrePhotographer", photographerdetails)
+                .post(`http://${IPaddress}:3000/registrePhotographer`, photographerdetails)
                 .then(res => {
                     console.log(res.data);
                     if (res.data.status == 'ok') {

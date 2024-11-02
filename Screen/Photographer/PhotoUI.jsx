@@ -23,17 +23,20 @@ import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CONS } from '../Constant';
 
 const PhotoUI = (props) => {
     const navigation = useNavigation();
     console.log(props);
     const [userData, setUserData] = useState('');
+    const IPaddress = CONS?.IPAddress;
+    const {from} = props?.route?.params || {};
 
     async function getData() {
         const token = await AsyncStorage.getItem('token');
         // console.log(token);
         axios
-            .post('http://192.168.1.36:3000/photodata', { token: token })
+            .post(`http://${IPaddress}:3000/photodata`, { token: token })
             .then(res => {
                 // console.log(res.data);
                 setUserData(res.data.data);
@@ -53,13 +56,23 @@ const PhotoUI = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            // getData();   
             BackHandler.addEventListener('hardwareBackPress', handleBackPress)
             return () => {
                 BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
             }
         })
     )
+
+    // used to to update home page as per updated data
+    useEffect(()=>{
+        if(from === "updateData"){
+            getData();
+            setTimeout(() => {
+                form = "",
+                props.route.params = ""
+            }, 100);
+        }
+    })
 
     useEffect(() => {
         getData();

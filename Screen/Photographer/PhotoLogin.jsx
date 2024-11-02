@@ -17,11 +17,14 @@ import { log } from 'react-native-reanimated';
 import Background from './../../Component/Background'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CONS } from '../Constant.tsx';
 
 const PhotoLogin = (props) => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const IPaddress = CONS?.IPAddress;
+
 
     function handleSubmit() {
         console.log(email, password);
@@ -30,7 +33,7 @@ const PhotoLogin = (props) => {
             password: password,
         }
 
-        axios.post("http://192.168.4.56:3000/loginPhotographer", photographerdata)
+        axios.post(`http://${IPaddress}:3000/loginPhotographer`, photographerdata)
             .then(res => {
                 console.log(res.data)
                 if (res.data.status == "ok") {
@@ -38,10 +41,9 @@ const PhotoLogin = (props) => {
                     AsyncStorage.setItem('token', res.data.data);
                     AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
                     AsyncStorage.setItem('userType', 'photographer');
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'DrawerNav' }],  // Ensure you reset to the drawer
-                    });
+                    setTimeout(() => {
+                        navigation.replace("DrawerNav");   
+                    }, 100);
                 }
                 else {
                     Alert.alert("User dosen't exist!!");

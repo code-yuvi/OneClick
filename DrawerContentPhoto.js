@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { CONS } from './Screen/Constant';
 
 const DrawerList = [
     { icon: 'home-outline', label: 'Home', navigateTo: 'PhotoHome'  },
@@ -42,9 +43,12 @@ const DrawerItems = props => {
 };
 function DrawerContentPhoto(props) {
     const navigation = useNavigation();
+    const IPaddress = CONS?.IPAddress;
+
     function signOut() {
         AsyncStorage.setItem('isLoggedIn', '');
         AsyncStorage.setItem('token', '');
+        AsyncStorage.setItem('userType', '');
         // navigation.navigate("SignOut")
         navigation.reset({ 
             index: 0,
@@ -57,7 +61,7 @@ function DrawerContentPhoto(props) {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
         axios
-            .post('http://192.168.1.36:3000/photodata', { token: token })
+            .post(`http://${IPaddress}:3000/photodata`, { token: token })
             .then(res => {
                 console.log(res.data);
                 setUserData(res.data.data);
@@ -84,7 +88,7 @@ function DrawerContentPhoto(props) {
                                     style={{ marginTop: 5 }}
                                 />
                                 <View style={{ marginLeft: 10, flexDirection: 'column' }}>
-                                    <Title style={styles.title}>{userData.name}</Title>
+                                    <Title style={styles.title}>{userData?.name}</Title>
                                     <Text style={styles.caption} numberOfLines={1}>
                                     {userData.email}
                                     </Text>

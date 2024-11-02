@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Animated } from 'react-native';
+import { CONS } from '../Constant';
 
 const { width, height } = Dimensions.get('window');
 const PhotoHome = () => {
@@ -30,6 +31,9 @@ const PhotoHome = () => {
     const scaleAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity 0
 
+    const IPaddress = CONS?.IPAddress;
+
+
     useEffect(() => {
         Animated.timing(fadeAnim, {
             toValue: 1,
@@ -42,7 +46,7 @@ const PhotoHome = () => {
         const token = await AsyncStorage.getItem('token');
         // console.log(token);
         axios
-            .post('http://192.168.4.56:3000/photodata', { token: token })
+            .post(`http://${IPaddress}:3000/photodata`, { token: token })
             .then(res => {
                 // console.log(res.data);
                 setUserData(res.data.data);
@@ -59,7 +63,7 @@ const PhotoHome = () => {
                 return;
             }
             try {
-                const response = await axios.post('http://192.168.4.56:3000/get-images', {
+                const response = await axios.post(`http://${IPaddress}:3000/get-images`, {
                     email: userData.email
                 });
                 setSliderImages(response.data.images); // Set images to slider
@@ -114,10 +118,12 @@ const PhotoHome = () => {
             formData.append('email', userData.email); // Pass user's email
         }
 
+        console.log('formData', formData)
+
         try {
             const token = await AsyncStorage.getItem('token');
             const response = await axios.post(
-                'http://192.168.4.56:3000/uplode',
+                `http://${IPaddress}:3000/uplode`,
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },
@@ -168,7 +174,7 @@ const PhotoHome = () => {
     // Handle delete (if needed)
     const handleDeleteImage = async (id) => {
         try {
-            const response = await axios.post('http://192.168.4.56:3000/delete-image', {
+            const response = await axios.post(`http://${IPaddress}:3000/delete-image`, {
                 email: userData.email,
                 imageId: id
             });
@@ -217,8 +223,8 @@ const PhotoHome = () => {
                     keyExtractor={(item, index) => item._id ? item._id : index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.iconContainer}>
-                            <TouchableOpacity onPress={() => handlePress(`http://192.168.4.56:3000/uploads/${item.filename}`)}>
-                                <Image source={{ uri: `http://192.168.4.56:3000/uploads/${item.filename}` }} style={styles.userImage} />
+                            <TouchableOpacity onPress={() => handlePress(`http://${IPaddress}:3000/uploads/${item.filename}`)}>
+                                <Image source={{ uri: `http://${IPaddress}:3000/uploads/${item.filename}` }} style={styles.userImage} />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.deleteButton}

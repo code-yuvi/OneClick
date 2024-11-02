@@ -17,11 +17,13 @@ import { log } from 'react-native-reanimated';
 import Background from './../../Component/Background'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CONS } from '../Constant';
 
 const LoginUser = ({ props }) => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const IPaddress = CONS?.IPAddress;
 
     function handleSubmit() {
         console.log(email, password);
@@ -30,7 +32,7 @@ const LoginUser = ({ props }) => {
             password: password,
         };
 
-        axios.post("http://192.168.1.36:3000/login-user", userData)
+        axios.post(`http://${IPaddress}:3000/login-user`, userData)
         .then(async res => {
             console.log(res.data);
             if (res.data.status == 'ok') {
@@ -38,10 +40,9 @@ const LoginUser = ({ props }) => {
                 AsyncStorage.setItem('token', res.data.data);
                 AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
                 AsyncStorage.setItem('userType', 'user');
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'DrawerNav' }],  // Ensure the UserUI screen is accessible
-                });
+                setTimeout(() => {
+                    navigation.replace("DrawerNav");   
+                }, 100);
             }
             else{
                 Alert.alert("User dosen't exist!!");
@@ -201,7 +202,7 @@ const LoginUser = ({ props }) => {
 //             password: password,
 //         }
 
-//         axios.post("http://192.168.99.56:3000/login-user", userdata)
+//         axios.post(`http://${IPaddress}:3000/login-user`, userdata)
 //             .then(res => {console.log(res.data)
 //                 if(res.data.status=="ok"){
 //                     Alert.alert("Logged In Successfull");
