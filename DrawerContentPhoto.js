@@ -11,8 +11,8 @@ import { CONS } from './Screen/Constant';
 
 const DrawerList = [
     { icon: 'home-outline', label: 'Home', navigateTo: 'PhotoHome'  },
-    { icon: 'account-multiple', label: 'Profile', navigateTo: 'Profile' },
-    { icon: 'account-group', label: 'User', navigateTo: 'PhotoHome' },
+    { icon: 'account-multiple', label: 'Profile', navigateTo: 'PhotoUI' },
+    { icon: 'account-group', label: 'Orders', navigateTo: 'MyBookings' },
     { icon: 'bookshelf', label: 'Library', navigateTo: 'PhotoHome' },
 ];
 const DrawerLayout = ({ icon, label, navigateTo }) => {

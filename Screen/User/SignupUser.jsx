@@ -17,9 +17,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Error from 'react-native-vector-icons/MaterialIcons';
 import { useState } from 'react';
-import Background from './../../Component/Background'
 import axios from 'axios';
 import { CONS } from '../Constant';
+import BackImage from '../../Component/BackImage';
 
 
 const SignupUser = (props) => {
@@ -49,7 +49,7 @@ const SignupUser = (props) => {
         };
         if (nameVerify && emailVerify && passwordVerify && contactVerify) {
             axios
-                .post("http://:3000/registreUser", userdetails)
+                .post(`http://${IPaddress}:3000/registreUser`, userdetails)
                 .then(res => {
                     console.log(res.data);
                     if (res.data.status == 'ok') {
@@ -123,29 +123,27 @@ const SignupUser = (props) => {
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={style.keyboard}>
-        <Background>
-            <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)' }}>
+        <BackImage>
+            <View style={{ backgroundColor: 'rgba(255, 255, 255, 0 )' }}>
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'always'}>
                     <View style={styles.logoContainer}>
-                        <Image
-                            style={styles.logo}
-                            source={require('../../assets/Logo-removebg-preview.png')}
-                        />
+                        
                     </View>
                     <View style={styles.loginContainer}>
-                        <Text style={styles.text_header}>Register!!!</Text>
+                        <Text style={styles.text_header}>User Registeration!!!</Text>
 
                         <View style={style.actions}>
                             <FontAwesome
                                 name="user-o"
-                                color="#420475"
+                                color="#adebad"
                                 style={styles.smallIcon}
                             />
                             <TextInput
                                 placeholder="First Name"
+                                placeholderTextColor="#bf80ff"
                                 style={style.textInput}
                                 onChange={e => handleName(e)}
                             />
@@ -169,11 +167,12 @@ const SignupUser = (props) => {
                         <View style={style.actions}>
                             <FontAwesome
                                 name="user"
-                                color="#420475"
+                                color="#adebad"
                                 style={styles.smallIcon}
                             />
                             <TextInput
                                 placeholder="Last Name"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleLastName(e)}
                             />
@@ -197,12 +196,13 @@ const SignupUser = (props) => {
                         <View style={style.actions}>
                             <Fontisto
                                 name="email"
-                                color="#420475"
+                                color="#adebad"
                                 size={24}
                                 style={{ marginLeft: 0, paddingRight: 5 }}
                             />
                             <TextInput
                                 placeholder="Email"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleEmail(e)}
                             />
@@ -224,12 +224,13 @@ const SignupUser = (props) => {
                         <View style={style.actions}>
                             <FontAwesome
                                 name="mobile"
-                                color="#420475"
+                                color="#adebad"
                                 size={35}
                                 style={{ paddingRight: 10, marginTop: -7, marginLeft: 5 }}
                             />
                             <TextInput
                                 placeholder="contact"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handlecontact(e)}
                                 maxLength={10}
@@ -250,9 +251,10 @@ const SignupUser = (props) => {
                             </Text>
                         )}
                         <View style={style.actions}>
-                            <FontAwesome name="lock" color="#420475" style={styles.smallIcon} />
+                            <FontAwesome name="lock" color="#adebad" style={styles.smallIcon} />
                             <TextInput
                                 placeholder="Password"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handlePassword(e)}
                                 secureTextEntry={showPassword}
@@ -286,9 +288,10 @@ const SignupUser = (props) => {
                         )}
 
                         <View style={style.actions}>
-                            <MaterialIcons name="password" color="#420475" style={styles.smallIcon} />
+                            <MaterialIcons name="password" color="#adebad" style={styles.smallIcon} />
                             <TextInput
                                 placeholder="Confirm Password"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleConfPassword(e)}
                                 secureTextEntry={showPassword}
@@ -328,7 +331,7 @@ const SignupUser = (props) => {
                                 paddingRight: 16,
                                 marginTop: 20,
                             }}>
-                            <Text style={{ color: '#000', fontSize: 16, fontWeight: '500' }}>
+                            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>
                                 By signing in, you agree to our{' '}
                             </Text>
                             <Text style={{ color: 'blue', fontWeight: 'bold', fontSize: 16 }}>
@@ -345,7 +348,7 @@ const SignupUser = (props) => {
                                 marginBottom: 10,
                                 marginLeft: 40,
                             }}>
-                            <Text style={{ color: '#000', fontSize: 16, fontWeight: '500' }}>
+                            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>
                                 and {" "}
                             </Text>
                             <Text style={{ color: "blue", fontWeight: 'bold', fontSize: 16 }}>
@@ -363,7 +366,7 @@ const SignupUser = (props) => {
                     </View>
 
                     <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", marginTop: 4 }}>
-                        <Text >Already Have Account?</Text>
+                        <Text style={{ color: '#fff', fontSize: 16 }}>Already Have Account?</Text>
                         <TouchableOpacity
                             onPress={() => props.navigation.navigate('LoginUser')}>
                             <Text
@@ -375,7 +378,7 @@ const SignupUser = (props) => {
 
                 </ScrollView>
             </View>
-        </Background>
+        </BackImage>
         </KeyboardAvoidingView> 
     );
 }
@@ -392,7 +395,7 @@ const style = StyleSheet.create({
         paddingHorizontal: 15,
 
         borderWidth: 1,
-        borderColor: '#420475',
+        borderColor: '#4d0099',
         borderRadius: 50,
         marginHorizontal: 10,
     },
@@ -409,7 +412,8 @@ const style = StyleSheet.create({
         flex: 1,
         marginTop: -12,
         fontWeight: '500',
-        color: 'black',
+        color: 'white',
+        
     },
     button: {
         alignItems: 'center',
@@ -423,232 +427,5 @@ const style = StyleSheet.create({
         flex: 1,
     }
 })
-
-
-
-
-
-
-
-// const SignupUser = (props) => {
-
-//     const [name, setName] = useState()
-//     const [lastName, setLastName] = useState()
-//     const [contact, setContact] = useState()
-//     const [email, setEmail] = useState();
-//     const [password, setPassword] = useState();
-//     const [confPass, setConfPass] = useState();
-
-//     const onCreateAccount = async () => {
-
-//         if (!email && !password && !name && !lastName && !contact && !confPass) {
-
-//             Alert.alert('Fill Details', 'Please fill all the fields', [
-//                 {
-//                     text: 'Cancel',
-//                     onPress: () => console.log('Cancel Pressed'),
-//                     style: 'cancel',
-//                 },
-//                 {
-//                     text: 'OK',
-//                     onPress: () => console.log('OK Pressed')
-//                 },
-//             ]);
-//             return;
-//         }
-//         if (password != confPass) {
-//             Alert.alert('Password', 'Passwords do not match', [
-//                 {
-//                     text: 'Cancel',
-//                     onPress: () => console.log('Cancel Pressed'),
-//                     style: 'cancel',
-//                 },
-//                 {
-//                     text: 'OK',
-//                 },
-//             ]);
-//             return;
-//         }
-
-//         const userdetails={
-//             name: name,
-//             lastName: lastName,
-//             contact: contact,
-//             email: email,
-//             password: password,
-//         }
-
-//         axios.post(`http://${IPaddress}:3000/registreUser`, userdetails)
-//         .then((res) => {console.log(res.data)
-//         if(res.data.status=="ok"){
-//             Alert.alert("Registration Succcessful")
-//             props.navigation.navigate('Login')
-//         }else{
-//             Alert.alert(JSON.stringify(res.data));
-//         }
-//         })
-
-//         .catch(error => console.log(error));
-//     }
-
-//     return (
-//         <Background>
-//             <View style={{ alignItems: "center", width: 380 }}>
-//                 <Text style={{
-//                     color: white,
-//                     fontSize: 64,
-//                     fontWeight: "bold",
-//                     marginVertical: 10
-//                 }}>Register</Text>
-//                 <Text
-//                     style={{
-//                         color: 'white',
-//                         fontSize: 19,
-//                         fontWeight: 'bold',
-//                         marginBottom: 20,
-//                     }}>
-//                     Create a new account
-//                 </Text>
-
-//                 <View style={{
-//                     backgroundColor: white, height: 700, width: 380, borderTopLeftRadius: 100,
-//                     paddingTop: 50, alignItems: 'center'
-//                 }}>
-
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd'
-//                     }} placeholder='First Name'
-//                         value={name}
-//                         onChangeText={(value) => setName(value)}
-//                     >
-//                     </TextInput>
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd',
-//                         marginTop: 10
-//                     }} placeholder='Last Name'
-//                         value={lastName}
-//                         onChangeText={(value) => setLastName(value)}
-//                     >
-//                     </TextInput>
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd',
-//                         marginTop: 10
-//                     }} placeholder='Email / Username'
-//                         keyboardType={'email-address'}
-//                         value={email}
-//                         onChangeText={(value) => setEmail(value)}
-//                     >
-//                     </TextInput>
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd',
-//                         marginTop: 10
-//                     }} placeholder='Contact Number'
-//                         keyboardType={'number'}
-//                         value={contact}
-//                         onChangeText={(value) => setContact(value)}
-//                     >
-//                     </TextInput>
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd',
-//                         marginTop: 10
-//                     }} placeholder='Password'
-//                         keyboardType={'Password'}
-//                         secureTextEntry={true}
-//                         value={password}
-//                         onChangeText={(value) => setPassword(value)}
-//                     >
-//                     </TextInput>
-//                     <TextInput style={{
-//                         padding: 10,
-//                         borderWidth: 1,
-//                         borderRadius: 30,
-//                         width: "80%",
-//                         backgroundColor: '#dddddd',
-//                         marginTop: 10
-//                     }} placeholder='Confirm Password'
-//                         keyboardType={'Password'}
-//                         secureTextEntry={true}
-//                         value={confPass}
-//                         onChangeText={(value) => setConfPass(value)}
-//                     >
-//                     </TextInput>
-
-
-//                     <View
-//                         style={{
-//                             display: 'flex',
-//                             flexDirection: 'row',
-//                             width: '92%',
-//                             paddingRight: 16,
-//                             marginTop: 20,
-//                         }}>
-//                         <Text style={{ color: 'grey', fontSize: 16 }}>
-//                             By signing in, you agree to our{' '}
-//                         </Text>
-//                         <Text style={{ color: darkGreen, fontWeight: 'bold', fontSize: 16 }}>
-//                             Terms & Conditions
-//                         </Text>
-//                     </View>
-
-//                     <View
-//                         style={{
-//                             display: 'flex',
-//                             flexDirection: 'row',
-//                             justifyContent: "center",
-//                             width: '78%',
-//                             paddingRight: 16,
-//                             marginBottom: 10
-//                         }}>
-//                         <Text style={{ color: 'grey', fontSize: 16 }}>
-//                             and {" "}
-//                         </Text>
-//                         <Text style={{ color: darkGreen, fontWeight: 'bold', fontSize: 16 }}>
-//                             Privacy Policy
-//                         </Text>
-//                     </View>
-//                     {/* <Btn textColor="white" bgcolo={darkGreen} btnLabel="Signup" Press={() => { alert("Account Created"); props.navigation.navigate('Login'); }} /> */}
-//                     <Button title="Signup" onPress={() => onCreateAccount()} />
-//                     <View
-//                         style={{
-//                             display: 'flex',
-//                             flexDirection: 'row',
-//                             justifyContent: 'center',
-//                         }}>
-//                         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-//                             Already have an account ?{' '}
-//                         </Text>
-//                         <TouchableOpacity
-//                             onPress={() => props.navigation.navigate('Login')}>
-//                             <Text
-//                                 style={{ color: darkGreen, fontWeight: 'bold', fontSize: 16 }}>
-//                                 Login
-//                             </Text>
-//                         </TouchableOpacity>
-//                     </View>
-//                 </View>
-//             </View>
-//         </Background>
-//     )
-// }
 
 export default SignupUser

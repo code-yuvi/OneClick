@@ -19,7 +19,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CONS } from '../Constant';
 
-const LoginUser = ({ props }) => {
+const LoginUser = ({ props }) => {      
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
