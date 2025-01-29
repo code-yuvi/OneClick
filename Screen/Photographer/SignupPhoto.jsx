@@ -26,6 +26,7 @@ import { useState } from 'react';
 import Background from './../../Component/Background'
 import axios from 'axios';
 import { CONS } from '../Constant';
+import BackImage from '../../Component/BackImage';
 
 const SignupPhoto = (props) => {
     const [name, setName] = useState('');
@@ -128,17 +129,17 @@ const SignupPhoto = (props) => {
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <Background>
-            <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)' }}>
+            <BackImage>
+            <View style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}>
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps={'always'}>
                     <View style={styles.logoContainer}>
-                        <Image
+                        {/* <Image
                             style={styles.logo}
                             source={require('../../assets/Logo-removebg-preview.png')}
-                        />
+                        /> */}
                     </View>
                     <View style={styles.loginContainer}>
                         <Text style={styles.text_header}>Register Photo!!!</Text>
@@ -151,6 +152,7 @@ const SignupPhoto = (props) => {
                             />
                             <TextInput
                                 placeholder="First Name"
+                                placeholderTextColor="#bf80ff"
                                 style={style.textInput}
                                 onChange={e => handleName(e)}
                             />
@@ -179,6 +181,7 @@ const SignupPhoto = (props) => {
                             />
                             <TextInput
                                 placeholder="Last Name"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleLastName(e)}
                             />
@@ -208,6 +211,7 @@ const SignupPhoto = (props) => {
                             />
                             <TextInput
                                 placeholder="Email"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleEmail(e)}
                             />
@@ -235,6 +239,7 @@ const SignupPhoto = (props) => {
                             />
                             <TextInput
                                 placeholder="contact"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handlecontact(e)}
                                 maxLength={10}
@@ -258,6 +263,7 @@ const SignupPhoto = (props) => {
                             <FontAwesome name="lock" color="#420475" style={styles.smallIcon} />
                             <TextInput
                                 placeholder="Password"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handlePassword(e)}
                                 secureTextEntry={showPassword}
@@ -294,6 +300,7 @@ const SignupPhoto = (props) => {
                             <MaterialIcons name="password" color="#420475" style={styles.smallIcon} />
                             <TextInput
                                 placeholder="Confirm Password"
+                                placeholderTextColor="#bf80ff"
                                 style={styles.textInput}
                                 onChange={e => handleConfPassword(e)}
                                 secureTextEntry={showPassword}
@@ -333,7 +340,7 @@ const SignupPhoto = (props) => {
                                 paddingRight: 16,
                                 marginTop: 20,
                             }}>
-                            <Text style={{ color: '#000', fontSize: 16, fontWeight: '500' }}>
+                            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>
                                 By signing in, you agree to our{' '}
                             </Text>
                             <Text style={{ color: 'blue', fontWeight: 'bold', fontSize: 16 }}>
@@ -350,7 +357,7 @@ const SignupPhoto = (props) => {
                                 marginBottom: 10,
                                 marginLeft: 40,
                             }}>
-                            <Text style={{ color: '#000', fontSize: 16, fontWeight: '500' }}>
+                            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>
                                 and {" "}
                             </Text>
                             <Text style={{ color: "blue", fontWeight: 'bold', fontSize: 16 }}>
@@ -368,7 +375,7 @@ const SignupPhoto = (props) => {
                     </View>
 
                     <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", marginTop: 4 }}>
-                        <Text >Already Have Account?</Text>
+                        <Text style={{ color: '#fff', fontSize: 16 }}>Already Have Account?</Text>
                         <TouchableOpacity
                             onPress={() => props.navigation.navigate('PhotoLogin')}>
                             <Text
@@ -380,7 +387,7 @@ const SignupPhoto = (props) => {
 
                 </ScrollView>
             </View>
-            </Background>
+            </BackImage>
         </KeyboardAvoidingView>
     )
 }
@@ -395,7 +402,7 @@ const style = StyleSheet.create({
         paddingHorizontal: 15,
 
         borderWidth: 1,
-        borderColor: '#420475',
+        borderColor: '#4d0099',
         borderRadius: 50,
         marginHorizontal: 10,
     },
@@ -412,7 +419,7 @@ const style = StyleSheet.create({
         flex: 1,
         marginTop: -12,
         fontWeight: '500',
-        color: 'black',
+        color: 'white',
     },
     button: {
         alignItems: 'center',

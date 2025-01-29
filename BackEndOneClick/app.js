@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const multer = require('multer');
 const path = require('path');
 const router = express.Router();
+const moment = require('moment');
 
 const port = 3000;
 const mongoURL = "mongodb+srv://yuvrajd568:deshmukh@cluster0.vovzp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -28,22 +29,217 @@ require("./userDetails")
 const user = mongoose.model('UserInfo')
 
 
+// const Booking = require("./Booking")
+require("./Booking")
+const Booking = mongoose.model('BookingInfo')
 
 app.get('/', (req, res) => {
     res.send({ status: 'Started' })
 })
 
+app.post('/create-booking', async (req, res) => {
+
+    const { userId, photographerId, date, time, location } = req.body;
+
+    if (!userId || !photographerId || !date || !time || !location) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        const bookingId = new mongoose.Types.ObjectId(); // Generate a new ObjectId for the booking
+
+        // Add booking to Photographer schema
+        const photographerUpdate = await photographer.findByIdAndUpdate(
+            photographerId,
+            {
+                $push: {
+                    bookings: {
+                        _id: bookingId, // Use the same bookingId
+                        userId,
+                        date,
+                        time,
+                        location,
+                        status: 'pending',
+                    }
+                }
+            },
+            { new: true }
+        );
+
+        // Add booking to User schema
+        const userUpdate = await user.findByIdAndUpdate(
+            userId,
+            {
+                $push: {
+                    bookings: {
+                        _id: bookingId, // Use the same bookingId
+                        photographerId,
+                        date,
+                        time,
+                        location,
+                        status: 'pending',
+                    }
+                }
+            },
+            { new: true }
+        );
+
+        if (!photographerUpdate || !userUpdate) {
+            return res.status(404).json({ message: 'User or Photographer not found.' });
+        }
+
+        res.status(201).json({ message: 'Booking created successfully.' });
+    } catch (error) {
+        console.error('Error creating booking:', error);
+        res.status(500).json({ message: 'Error creating booking.' });
+    }
+});
+
+app.get('/my-bookings', async (req, res) => {
+    try {
+        const { userId } = req.query; // Assuming you're passing the userId via query parameter
+
+        const User = await user.findById(userId).populate('bookings.photographerId');  
+        if (!User) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User bookings fetched successfully', data: User.bookings });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching user bookings' });
+    }
+});
+
+app.get('/photo-bookings', async (req, res) => {
+    try {
+        const { photographerId } = req.query; // Assuming you're passing the userId via query parameter
+        if (!photographerId) {
+            return res.status(400).json({ message: 'Photographer ID is required' });
+        }
+
+        const Photographer = await photographer.findById(photographerId).populate('bookings.userId', 'name email');  
+        
+        if (!Photographer) {
+            return res.status(404).json({ message: 'Photographer not found' });
+        }
+
+        res.status(200).json({ message: 'Photographer bookings fetched successfully', data: Photographer.bookings });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching user bookings' });
+    }
+});
+
+app.delete('/cancel-booking', async (req, res) => {
+    try {
+        const { userId, bookingId, photographerId } = req.body; // userId and bookingId to identify the booking to cancel
+
+        const User = await user.findById(userId);
+        const Photographer = await photographer.findById(photographerId);
+
+        if (!User) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (!Photographer) {
+            return res.status(404).json({ message: 'Photographer not found' });
+        }
+
+        // Filter out the booking to cancel
+        User.bookings = User.bookings.filter((booking) => booking._id.toString() !== bookingId);
+        Photographer.bookings = Photographer.bookings.filter((booking) => booking._id.toString() !== bookingId);
+
+        await User.save();
+        await Photographer.save();
+
+        res.status(200).json({ message: 'Booking canceled successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error canceling booking' });
+    }
+});
+
+// Photographer Booking
+
+app.get('/photographer-bookings', async (req, res) => {
+    try {
+        const { photographerId } = req.query; // Get photographerId from the query
+
+        // Find the photographer by photographerId
+        const photographer = await mongoose.model('PhotographerInfo').findById(photographerId).populate('bookings.userId', 'name email'); // Populate user details for each booking
+
+        if (!photographer) {
+            return res.status(404).json({ message: 'Photographer not found' });
+        }
+
+        // Send the bookings data to the frontend
+        res.status(200).json({ bookings: photographer.bookings });
+    } catch (error) {
+        console.error('Error fetching photographer bookings:', error);
+        res.status(500).json({ message: 'Error fetching photographer bookings' });
+    }
+});
+
+
+app.post('/update-booking-status', async (req, res) => {
+    const { bookingId, status } = req.body;
+
+    if (!bookingId || !status) {
+        return res.status(400).json({ message: 'Booking ID and status are required.' });
+    }
+
+    if (!['pending', 'confirmed', 'rejected'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value.' });
+    }
+
+    try {
+        const session = await mongoose.startSession(); // Start a transaction
+        session.startTransaction();
+
+        // Find the booking in Photographer schema and update the status
+        const photographerUpdate = await photographer.updateOne(
+            { 'bookings._id': bookingId },
+            { $set: { 'bookings.$.status': status } },
+            { session }
+        );
+
+        // Find the booking in User schema and update the status
+        const userUpdate = await user.updateOne(
+            { 'bookings._id': bookingId },
+            { $set: { 'bookings.$.status': status } },
+            { session }
+        );
+
+        // Check if both updates were successful
+        if (photographerUpdate.nModified === 0 || userUpdate.nModified === 0) {
+            await session.abortTransaction(); // Abort the transaction on failure
+            session.endSession();
+            return res.status(404).json({ message: 'Booking not found in one or both schemas.' });
+        }
+
+        await session.commitTransaction(); // Commit the transaction on success
+        session.endSession();
+
+        res.status(200).json({ message: `Booking status updated to ${status} successfully.` });
+    } catch (error) {
+        console.error('Error updating booking status:', error);
+        res.status(500).json({ message: 'Error updating booking status.' });
+    }
+});
+
 
 app.post("/registrePhotographer", async (req, res) => {
     const { name, lastName, email, password, contact, userType } = req.body;
-
+    
     const olduser = await photographer.findOne({ email: email });
-
-
+    
+    
     if (olduser) {
         return res.send({ data: "User Already Exist!!" })
     }
-
+    
     const encryptpass = await bcrypt.hash(password, 10);
     try {
         await photographer.create({
@@ -53,7 +249,7 @@ app.post("/registrePhotographer", async (req, res) => {
             contact: contact,
             password: encryptpass,
             userType: userType
-
+            
         });
         res.send({ status: "ok", data: "Photographer Registered Successfully" })
     }
@@ -315,7 +511,15 @@ app.post('/delete-image', async (req, res) => {
 app.use('/uploads', express.static('uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
+app.get('/get-all-photo', async (req, res) => {
+    try {
+        const data = await photographer.find({});
+        res.send({ status: "Ok", data: data });
+    }
+    catch (error) {
+        return res.send({ error: error });
+    }
+})
 
 app.listen(port, () => {
     console.log('Node server Started')

@@ -104,7 +104,7 @@ const UserUI = (props) => {
                         style={{
                             marginTop: -350,
                         }}
-                        source={require('./../../assets/profile.png')}
+                        source={require('./../../assets/profile.jpg')}
                     />
                 </View>
                 <View style={{ alignItems: 'center' }}>

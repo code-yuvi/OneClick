@@ -30,6 +30,8 @@ import PhotoHome from './Screen/Photographer/PhotoHome';
 import Profile from './Screen/Photographer/Profile';
 import UserUI from './Screen/User/UserUI';
 import HomeU from './Screen/User/HomeU';
+import MyBooking from './Screen/User/MyBooking';
+import MyBookings from './Screen/Photographer/MyBookings';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -73,13 +75,15 @@ const DrawerNavWrapper = () => {
           <Drawer.Screen name='UserUI' component={UserUI} />
           <Drawer.Screen name='UpdateProfile' component={UpdateProfile} />
           <Drawer.Screen name='HomeU' component={HomeU} />
+          <Drawer.Screen name='MyBooking' component={MyBooking} />
+
         </>
       ) : (
         <>
           <Drawer.Screen name='PhotoUI' component={PhotoUI} />
           <Drawer.Screen name='UpdateProfilePhoto' component={UpdateProfilePhoto} />
           <Drawer.Screen name='PhotoHome' component={PhotoHome} />
-          <Drawer.Screen name='Profile' component={Profile} />
+          <Drawer.Screen name='MyBookings' component={MyBookings} />
         </>
       )}
       <Drawer.Screen name='SignOut' component={StackNav} />

@@ -39,10 +39,11 @@ const PhotoUI = (props) => {
             .post(`http://${IPaddress}:3000/photodata`, { token: token })
             .then(res => {
                 // console.log(res.data);
+                console.log("UserType:",res.data.data.userType);
+                console.log("UserType:",res.data.data);
                 setUserData(res.data.data);
             });
     }
-    console.log('hiii')
     const handleBackPress = () => {
         Alert.alert('Go Back', 'Press Ok to Exit', [
             {
@@ -103,7 +104,7 @@ const PhotoUI = (props) => {
                         style={{
                             marginTop: -350,
                         }}
-                        source={require('./../../assets/profile.png')}
+                        source={require('./../../assets/pprofile.jpg')}
                     />
                 </View>
                 <View style={{ alignItems: 'center' }}>

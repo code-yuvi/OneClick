@@ -7,21 +7,18 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'; 
-import {CONS} from "../OneClick/Screen/Constant"
+import {CONS} from "./Screen/Constant"
+
 
 
 const DrawerList = [
-    { icon: 'home-outline', label: 'Home11', navigateTo: 'HomeU' },
-    { icon: 'account-multiple', label: 'Profile', navigateTo: '' },
-    { icon: 'account-group', label: 'User', navigateTo: 'User' },
+    { icon: 'home-outline', label: 'Home', navigateTo: 'HomeU' },
+    { icon: 'account-multiple', label: 'Profile', navigateTo: 'UserUI' },
+    { icon: 'account-group', label: 'My Booking', navigateTo: 'MyBooking' },
     { icon: 'bookshelf', label: 'Library', navigateTo: '' },
 ];   
 const DrawerLayout = ({ icon, label, navigateTo }) => {
-
     const navigation = useNavigation();
-    const IPaddress = CONS?.IPAddress;
-
-
     // console.log(userData);
     return (
         <DrawerItem
@@ -47,7 +44,9 @@ const DrawerItems = props => {
     });
 };
 function DrawerContent(props) {
+    const IPaddress = CONS?.IPAddress;
     const navigation = useNavigation();
+
     function signOut() {
         AsyncStorage.setItem('isLoggedIn', '');
         AsyncStorage.setItem('token', '');
@@ -57,8 +56,8 @@ function DrawerContent(props) {
             index: 0,
             routes: [{ name: 'SignOut' }], // Replace with the name of the screen you want to go to
         });
-
     }
+    
     const [usersData, setUserData] = useState('');
     async function getData() {
         const token = await AsyncStorage.getItem('token');
@@ -91,10 +90,10 @@ function DrawerContent(props) {
                                     style={{ marginTop: 5 }}
                                 />
                                 <View style={{ marginLeft: 10, flexDirection: 'column' }}>
-                                    {/* <Title style={styles.title}>{usersData.name}</Title> */}
-                                    {/* <Text style={styles.caption} numberOfLines={1}>
+                                    <Title style={styles.title}>{usersData.name}</Title>
+                                    <Text style={styles.caption} numberOfLines={1}>
                                     {usersData.email}
-                                    </Text> */}
+                                    </Text>
                                 </View>
                             </View>
                         </View>
